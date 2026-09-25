@@ -16,6 +16,9 @@ public class GewinnController {
         this.model = model;
         this.view = view;
 
+        // Aus Version 1.1: Reset-Button zu Spielbeginn deaktivieren
+        this.view.setButtonNochEinmalAktiv(false);
+
         this.view.addSpielerZahlListener(new RundeSpielenListener());
         this.view.addNochEinmalListener(new NochEinmalListener());
     }
@@ -26,6 +29,7 @@ public class GewinnController {
             String eingabe = view.getSpielerEingabe();
             int zahl;
 
+            // Absicherung gegen ungültige Eingaben
             try {
                 zahl = Integer.parseInt(eingabe);
                 if (zahl < 1 || zahl > 9) {
@@ -37,14 +41,21 @@ public class GewinnController {
                 return;
             }
 
+            // Spiellogik aufrufen
             model.berechneComputerZahl();
             model.berechneRunde(zahl);
 
+            // GUI aktualisieren
             view.setComputerZahlText(String.valueOf(model.getComputerZahl()));
             view.setPunkteText("Punkte: " + model.getGesamtPunkte());
             view.setErgebnisText("Runde: " + (model.getRundenErgebnis() > 0 ? "+" : "") + model.getRundenErgebnis());
 
-            // Optik: Grün bei Gewinn, Rot bei Verlust
+            // --- AUFLÖSUNG DER BEIDEN BRANCHES ---
+            // Aus Version 1.1: Eingabefeld nach Zug sperren, Reset-Button freigeben
+            view.setEingabeAktiv(false);
+            view.setButtonNochEinmalAktiv(true);
+
+            // Aus Version 2.0: Farbliche Rückmeldung der Labels
             if (model.getRundenErgebnis() > 0 || model.hatGewonnen()) {
                 view.setLabelFarben(Color.GREEN);
             } else if (model.getRundenErgebnis() < 0 || model.hatVerloren()) {
@@ -53,6 +64,7 @@ public class GewinnController {
                 view.setLabelFarben(Color.WHITE);
             }
 
+            // Spielende prüfen
             if (model.hatGewonnen()) {
                 JOptionPane.showMessageDialog(view, "Herzlichen Glückwunsch! Du hast gewonnen!", "Spiel gewonnen", JOptionPane.INFORMATION_MESSAGE);
             } else if (model.hatVerloren()) {
@@ -65,8 +77,10 @@ public class GewinnController {
         @Override
         public void actionPerformed(ActionEvent e) {
             view.felderZuruecksetzen();
-            // Optik: Farben beim Reset wieder auf Weiß
-            view.setLabelFarben(Color.WHITE);
+            // Beide Features zurücksetzen:
+            view.setEingabeAktiv(true);           // Textfeld wieder entsperren
+            view.setButtonNochEinmalAktiv(false); // Reset-Button wieder sperren
+            view.setLabelFarben(Color.WHITE);     // Farben wieder auf Standard Weiß
         }
     }
 }
