@@ -16,46 +16,47 @@ public class GewinnController {
         this.model = model;
         this.view = view;
 
-        // Aus Version 1.1: Reset-Button zu Spielbeginn deaktivieren
+        // button erst nach dem ersten zug erlauben
         this.view.setButtonNochEinmalAktiv(false);
 
+        // events registrieren
         this.view.addSpielerZahlListener(new RundeSpielenListener());
         this.view.addNochEinmalListener(new NochEinmalListener());
     }
 
+    // reagiert auf enter im eingabefeld
     private class RundeSpielenListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String eingabe = view.getSpielerEingabe();
             int zahl;
 
-            // Absicherung gegen ungültige Eingaben
+            // ungueltige eingaben und buchstaben abfangen
             try {
                 zahl = Integer.parseInt(eingabe);
                 if (zahl < 1 || zahl > 9) {
-                    JOptionPane.showMessageDialog(view, "Bitte eine Zahl von 1 bis 9 eingeben!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(view, "Zahl muss zwischen 1 und 9 liegen!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(view, "Ungültige Eingabe! Bitte eine Zahl eingeben.", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Bitte eine Zahl eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Spiellogik aufrufen
+            // runde rechnen
             model.berechneComputerZahl();
             model.berechneRunde(zahl);
 
-            // GUI aktualisieren
+            // gui werte updaten
             view.setComputerZahlText(String.valueOf(model.getComputerZahl()));
             view.setPunkteText("Punkte: " + model.getGesamtPunkte());
             view.setErgebnisText("Runde: " + (model.getRundenErgebnis() > 0 ? "+" : "") + model.getRundenErgebnis());
 
-            // --- AUFLÖSUNG DER BEIDEN BRANCHES ---
-            // Aus Version 1.1: Eingabefeld nach Zug sperren, Reset-Button freigeben
+            // textfeld sperren, button freischalten
             view.setEingabeAktiv(false);
             view.setButtonNochEinmalAktiv(true);
 
-            // Aus Version 2.0: Farbliche Rückmeldung der Labels
+            // farbfeedback: gruen bei plus, rot bei minus
             if (model.getRundenErgebnis() > 0 || model.hatGewonnen()) {
                 view.setLabelFarben(Color.GREEN);
             } else if (model.getRundenErgebnis() < 0 || model.hatVerloren()) {
@@ -64,23 +65,24 @@ public class GewinnController {
                 view.setLabelFarben(Color.WHITE);
             }
 
-            // Spielende prüfen
+            // popups bei spielende
             if (model.hatGewonnen()) {
-                JOptionPane.showMessageDialog(view, "Herzlichen Glückwunsch! Du hast gewonnen!", "Spiel gewonnen", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Gewonnen! Du hast mindestens 100 Punkte erreicht.", "Sieg", JOptionPane.INFORMATION_MESSAGE);
             } else if (model.hatVerloren()) {
-                JOptionPane.showMessageDialog(view, "Schade! Dein Punktestand ist auf 0 gefallen.", "Spiel verloren", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Verloren! Punkte sind auf 0 gefallen.", "Niederlage", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
 
+    // reagiert auf "noch einmal" button
     private class NochEinmalListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             view.felderZuruecksetzen();
-            // Beide Features zurücksetzen:
-            view.setEingabeAktiv(true);           // Textfeld wieder entsperren
-            view.setButtonNochEinmalAktiv(false); // Reset-Button wieder sperren
-            view.setLabelFarben(Color.WHITE);     // Farben wieder auf Standard Weiß
+            // alles wieder auf anfang setzen
+            view.setEingabeAktiv(true);
+            view.setButtonNochEinmalAktiv(false);
+            view.setLabelFarben(Color.WHITE);
         }
     }
 }

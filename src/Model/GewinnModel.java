@@ -6,7 +6,7 @@ public class GewinnModel {
     private int computerZahl;
     private int rundenErgebnis;
 
-    // Parameterloser Konstruktor: Startet mit 30 Punkten
+    // start mit 30 punkten laut angabe
     public GewinnModel() {
         this.gesamtPunkte = 30;
     }
@@ -27,12 +27,12 @@ public class GewinnModel {
         return spielerZahl;
     }
 
-    // Zufallszahl von 1 bis 9 für den Computer
+    // zufallszahl zwischen 1 und 9
     public void berechneComputerZahl() {
         this.computerZahl = (int) (Math.random() * 9) + 1;
     }
 
-    // Rundenberechnung ohne Math.abs
+    // regeln aus der angabe: gleich +20, abstand 1 +5, sonst -10
     public void berechneRunde(int spielerZahl) {
         this.spielerZahl = spielerZahl;
 
@@ -47,10 +47,12 @@ public class GewinnModel {
         this.gesamtPunkte += this.rundenErgebnis;
     }
 
+    // gewinn ab 100 punkten
     public boolean hatGewonnen() {
         return this.gesamtPunkte >= 100;
     }
 
+    // verloren bei 0 oder weniger
     public boolean hatVerloren() {
         return this.gesamtPunkte <= 0;
     }
