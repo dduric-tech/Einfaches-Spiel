@@ -27,5 +27,14 @@ public class GewinnModel {
     public int getRundenErgebnis() {
         return rundenErgebnis;
     }
+    public void berechneComputerZahl() {
+        this.computerZahl = (int) (Math.random() * 9) + 1;
+    }
+    public boolean hatGewonnen() {
+        return this.gesamtPunkte >= 100;
+    }
+    public boolean hatVerloren() {
+        return this.gesamtPunkte <= 0;
+    }
 }
 
