@@ -4,6 +4,7 @@ import Model.GewinnModel;
 import view.GewinnView;
 
 import javax.swing.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,7 +16,6 @@ public class GewinnController {
         this.model = model;
         this.view = view;
 
-        // Listener an die GUI-Elemente der View binden
         this.view.addSpielerZahlListener(new RundeSpielenListener());
         this.view.addNochEinmalListener(new NochEinmalListener());
     }
@@ -26,7 +26,6 @@ public class GewinnController {
             String eingabe = view.getSpielerEingabe();
             int zahl;
 
-            // Eingabe überprüfen
             try {
                 zahl = Integer.parseInt(eingabe);
                 if (zahl < 1 || zahl > 9) {
@@ -38,16 +37,22 @@ public class GewinnController {
                 return;
             }
 
-            // Spiellogik aufrufen
             model.berechneComputerZahl();
             model.berechneRunde(zahl);
 
-            // GUI aktualisieren
             view.setComputerZahlText(String.valueOf(model.getComputerZahl()));
             view.setPunkteText("Punkte: " + model.getGesamtPunkte());
             view.setErgebnisText("Runde: " + (model.getRundenErgebnis() > 0 ? "+" : "") + model.getRundenErgebnis());
 
-            // Spielende prüfen
+            // Optik: Grün bei Gewinn, Rot bei Verlust
+            if (model.getRundenErgebnis() > 0 || model.hatGewonnen()) {
+                view.setLabelFarben(Color.GREEN);
+            } else if (model.getRundenErgebnis() < 0 || model.hatVerloren()) {
+                view.setLabelFarben(Color.RED);
+            } else {
+                view.setLabelFarben(Color.WHITE);
+            }
+
             if (model.hatGewonnen()) {
                 JOptionPane.showMessageDialog(view, "Herzlichen Glückwunsch! Du hast gewonnen!", "Spiel gewonnen", JOptionPane.INFORMATION_MESSAGE);
             } else if (model.hatVerloren()) {
@@ -60,6 +65,8 @@ public class GewinnController {
         @Override
         public void actionPerformed(ActionEvent e) {
             view.felderZuruecksetzen();
+            // Optik: Farben beim Reset wieder auf Weiß
+            view.setLabelFarben(Color.WHITE);
         }
     }
 }
