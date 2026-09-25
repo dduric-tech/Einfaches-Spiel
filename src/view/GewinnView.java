@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Grafische Benutzeroberflaeche fuer das Spiel.
+ *
+ * @author Dario Duric
+ */
 public class GewinnView extends JFrame {
 
     private final JLabel lblPunkte;

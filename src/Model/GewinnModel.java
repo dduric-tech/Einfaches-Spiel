@@ -1,5 +1,10 @@
 package Model;
 
+/**
+ * Logik und Datenhaltung für das Zahlen-Gewinnspiel.
+ *
+ * @author Dario Duric
+ */
 public class GewinnModel {
     private int gesamtPunkte;
     private int spielerZahl;

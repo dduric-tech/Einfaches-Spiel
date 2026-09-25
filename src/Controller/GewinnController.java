@@ -8,6 +8,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Verbindet View und Model und steuert den Ablauf.
+ *
+ * @author Dario Duric
+ */
 public class GewinnController {
     private final GewinnModel model;
     private final GewinnView view;
