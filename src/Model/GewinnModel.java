@@ -36,5 +36,16 @@ public class GewinnModel {
     public boolean hatVerloren() {
         return this.gesamtPunkte <= 0;
     }
+    public void berechneRunde(int spielerZahl) {
+        this.spielerZahl = spielerZahl;
+        if(this.spielerZahl == this.computerZahl) {
+            this.rundenErgebnis = 20;
+        } else if (this.spielerZahl == this.computerZahl +1 || this.spielerZahl == this.computerZahl -1) {
+            this.rundenErgebnis = 5;
+        } else {
+            this.rundenErgebnis = -10;
+        }
+        this.gesamtPunkte += this.rundenErgebnis;
+    }
 }
 
