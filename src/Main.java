@@ -3,7 +3,7 @@ import Model.GewinnModel;
 import view.GewinnView;
 
 /**
- * Mainklasse
+ * Startklasse der Anwendung.
  *
  * @author Dario Duric
  */
@@ -16,5 +16,6 @@ public class Main {
         GewinnView view = new GewinnView();
         new GewinnController(model, view);
         view.setVisible(true);
+        view.felderZuruecksetzen();
     }
 }
