@@ -3,7 +3,7 @@ import Model.GewinnModel;
 import view.GewinnView;
 
 /**
- * Startklasse der Anwendung.
+ * Mainklasse
  *
  * @author Dario Duric
  */
