@@ -17,5 +17,6 @@ public class Main {
         new GewinnController(model, view);
         view.setVisible(true);
         view.felderZuruecksetzen();
+
     }
 }
