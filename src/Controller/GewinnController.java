@@ -17,51 +17,56 @@ public class GewinnController {
     private final GewinnModel model;
     private final GewinnView view;
 
+    /**
+     * Initialisiert den Controller und verknuepft die ActionListener.
+     */
     public GewinnController(GewinnModel model, GewinnView view) {
         this.model = model;
         this.view = view;
 
-        // button erst nach dem ersten zug erlauben
         this.view.setButtonNochEinmalAktiv(false);
-
-        // events registrieren
         this.view.addSpielerZahlListener(new RundeSpielenListener());
         this.view.addNochEinmalListener(new NochEinmalListener());
     }
 
-    // reagiert auf enter im eingabefeld
     private class RundeSpielenListener implements ActionListener {
+        /**
+         * Fuehrt die Spielrunde aus, validiert die Eingabe und aktualisiert die View.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             String eingabe = view.getSpielerEingabe();
             int zahl;
 
-            // ungueltige eingaben und buchstaben abfangen
             try {
                 zahl = Integer.parseInt(eingabe);
                 if (zahl < 1 || zahl > 9) {
-                    JOptionPane.showMessageDialog(view, "Zahl muss zwischen 1 und 9 liegen!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(view, "Nur Zahlen zwischen 1 und 9 eingeben", "Hinweis", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(view, "Bitte eine Zahl eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Das ist keine gueltige Zahl", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // runde rechnen
             model.berechneComputerZahl();
             model.berechneRunde(zahl);
 
-            // gui werte updaten
             view.setComputerZahlText(String.valueOf(model.getComputerZahl()));
-            view.setPunkteText("Punkte: " + model.getGesamtPunkte());
-            view.setErgebnisText("Runde: " + (model.getRundenErgebnis() > 0 ? "+" : "") + model.getRundenErgebnis());
+            view.setPunkteText(String.valueOf(model.getGesamtPunkte()));
 
-            // textfeld sperren, button freischalten
+            if (model.hatVerloren()) {
+                view.setErgebnisText("Verloren");
+            } else if (model.hatGewonnen()) {
+                view.setErgebnisText("Gewonnen!");
+            } else {
+                int punkte = model.getRundenErgebnis();
+                view.setErgebnisText((punkte > 0 ? "+" : "") + punkte);
+            }
+
             view.setEingabeAktiv(false);
             view.setButtonNochEinmalAktiv(true);
 
-            // farbfeedback: gruen bei plus, rot bei minus
             if (model.getRundenErgebnis() > 0 || model.hatGewonnen()) {
                 view.setLabelFarben(Color.GREEN);
             } else if (model.getRundenErgebnis() < 0 || model.hatVerloren()) {
@@ -70,21 +75,21 @@ public class GewinnController {
                 view.setLabelFarben(Color.WHITE);
             }
 
-            // popups bei spielende
             if (model.hatGewonnen()) {
-                JOptionPane.showMessageDialog(view, "Gewonnen! Du hast mindestens 100 Punkte erreicht.", "Sieg", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Glueckwunsch du hast 100 Punkte erreicht", "Gewonnen", JOptionPane.INFORMATION_MESSAGE);
             } else if (model.hatVerloren()) {
-                JOptionPane.showMessageDialog(view, "Verloren! Punkte sind auf 0 gefallen.", "Niederlage", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Du hast keine Punkte mehr", "Verloren", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
 
-    // reagiert auf "noch einmal" button
     private class NochEinmalListener implements ActionListener {
+        /**
+         * Setzt die UI-Felder und Zustaende fuer die naechste Runde zurueck.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             view.felderZuruecksetzen();
-            // alles wieder auf anfang setzen
             view.setEingabeAktiv(true);
             view.setButtonNochEinmalAktiv(false);
             view.setLabelFarben(Color.WHITE);

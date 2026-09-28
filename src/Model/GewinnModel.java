@@ -11,33 +11,51 @@ public class GewinnModel {
     private int computerZahl;
     private int rundenErgebnis;
 
-    // start mit 30 punkten laut angabe
+    /**
+     * Startet das Spiel mit 30 Punkten.
+     */
     public GewinnModel() {
         this.gesamtPunkte = 30;
     }
 
+    /**
+     * Liefert den aktuellen Punktestand.
+     */
     public int getGesamtPunkte() {
         return gesamtPunkte;
     }
 
+    /**
+     * Liefert die vom Computer gezogene Zahl.
+     */
     public int getComputerZahl() {
         return computerZahl;
     }
 
+    /**
+     * Liefert die Punkteänderung der letzten Runde.
+     */
     public int getRundenErgebnis() {
         return rundenErgebnis;
     }
 
+    /**
+     * Liefert die getippte Zahl des Spielers.
+     */
     public int getSpielerZahl() {
         return spielerZahl;
     }
 
-    // zufallszahl zwischen 1 und 9
+    /**
+     * Ermittelt eine Zufallszahl von 1 bis 9 für den Computer.
+     */
     public void berechneComputerZahl() {
         this.computerZahl = (int) (Math.random() * 9) + 1;
     }
 
-    // regeln aus der angabe: gleich +20, abstand 1 +5, sonst -10
+    /**
+     * Berechnet das Rundenergebnis basierend auf dem Abstand zur Computerzahl.
+     */
     public void berechneRunde(int spielerZahl) {
         this.spielerZahl = spielerZahl;
 
@@ -52,12 +70,16 @@ public class GewinnModel {
         this.gesamtPunkte += this.rundenErgebnis;
     }
 
-    // gewinn ab 100 punkten
+    /**
+     * Prüft, ob mindestens 100 Punkte erreicht wurden.
+     */
     public boolean hatGewonnen() {
         return this.gesamtPunkte >= 100;
     }
 
-    // verloren bei 0 oder weniger
+    /**
+     * Prüft, ob die Punkte auf 0 oder weniger gefallen sind.
+     */
     public boolean hatVerloren() {
         return this.gesamtPunkte <= 0;
     }

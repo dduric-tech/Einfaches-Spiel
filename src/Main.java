@@ -2,15 +2,19 @@ import Controller.GewinnController;
 import Model.GewinnModel;
 import view.GewinnView;
 
-import javax.swing.SwingUtilities;
-
+/**
+ * Startklasse der Anwendung.
+ *
+ * @author Dario Duric
+ */
 public class Main {
+    /**
+     * Startet das Programm, erzeugt MVC-Instanzen und macht das Fenster sichtbar.
+     */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GewinnModel model = new GewinnModel();
-            GewinnView view = new GewinnView();
-            new GewinnController(model, view);
-            view.setVisible(true);
-        });
+        GewinnModel model = new GewinnModel();
+        GewinnView view = new GewinnView();
+        new GewinnController(model, view);
+        view.setVisible(true);
     }
 }
